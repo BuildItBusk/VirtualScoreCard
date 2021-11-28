@@ -1,0 +1,56 @@
+﻿@page "/round"
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using GolfScoreUI.Data
+
+@inject ProtectedLocalStorage ProtectedLocalStorage
+
+<h3>Scoreboard</h3>
+
+<div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="row">#</th>
+          @foreach(var player in scorecard.Players)
+          {
+              <th scope="col">@player.Name</th>
+          }          
+        </tr>
+      </thead>
+      <tbody>
+      @for(int i = 0; i < scorecard.NumberOfHoles; i++)
+      {
+            int hole = i;
+            <tr>
+                <th scope="row">@(hole + 1)</th>
+                @for(int j = 0; j < scorecard.Players.Count; j++)
+                {
+                    int playerIndex = j;
+                    <td class="col-xs-1"><input id="name" class="form-control" @bind-value="@scorecard.Score[playerIndex, hole]" @bind-value:event="oninput" @onkeyup="UpdateScore" /></td>
+                }            
+            </tr>
+        }
+        <tr>
+            <th>Sum</th>
+            @for(int i = 0; i < players.Count; i++)
+            {                
+                int playerIndex = i;
+                <td>@score[i]</td>
+            }
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+@code {
+    private static List<Player> players = new List<Player> { new Player("David"), new Player("Busk"), new Player("Mark")};
+    private Scorecard scorecard = new Scorecard(players);
+    private int[] score = new int[players.Count];
+
+    private async Task UpdateScore()
+    {
+        Console.WriteLine("Score updated!");
+        score = scorecard.ScoreSum;
+    }
+}

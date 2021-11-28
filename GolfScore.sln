@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.31903.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GolfScoreUI", "GolfScoreUI\GolfScoreUI.csproj", "{EA54D1A4-E898-4F61-BF95-9A80AFEA417C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{AB625374-E370-498E-8834-2170807DA02F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA54D1A4-E898-4F61-BF95-9A80AFEA417C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA54D1A4-E898-4F61-BF95-9A80AFEA417C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA54D1A4-E898-4F61-BF95-9A80AFEA417C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA54D1A4-E898-4F61-BF95-9A80AFEA417C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB625374-E370-498E-8834-2170807DA02F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB625374-E370-498E-8834-2170807DA02F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB625374-E370-498E-8834-2170807DA02F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB625374-E370-498E-8834-2170807DA02F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {82A9782B-7218-4377-BFC8-4EA1C44B4B94}
+	EndGlobalSection
+EndGlobal
