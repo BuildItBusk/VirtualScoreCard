@@ -3,10 +3,10 @@
 
 <h3>Start a new round</h3>
 
-<form>
+<EditForm Model="@scorecard" OnValidSubmit="@HandleValidSubmit">
 <div class="form-group">
     <label for="maxStrokesGroup">Maximum number of strokes per hole</label>
-    <select class="form-select" id="maxStrokes" @bind="MaxStrokes">
+    <select class="form-select" id="maxStrokes" @bind="scorecard.MaxStrokes">
         <option selected>Choose...</option>
         @for(int i = 1; i <= 10; i++)
         {
@@ -17,26 +17,21 @@
   </div>
   <div class="form-group">
     <label for="playerNamesGroup">Player names</label>
-    @foreach(var player in Players)
+    @for (int i = 1; i <= scorecard.Players.Count; i++)
     {
-        <input type="text" class="form-control mb-2" id="player-@PlayerIndex" placeholder="Player @PlayerIndex">
-        PlayerIndex++;
+        int idx = i;
+        <input type="text" class="form-control mb-2" id="player-@idx" placeholder="Player @idx">
     }
   </div>
   <button type="submit" class="btn btn-primary">Start round</button>
-</form>
+</EditForm>
 
 @code {
-    private int PlayerIndex = 1;
-    private int MaxStrokes { get; set; } = 8;
-    private List<Player> Players { get; } = new List<Player>();
+    private Scorecard scorecard = new Scorecard();
 
-    protected override async Task OnInitializedAsync()
+    private void HandleValidSubmit()
     {
-        for (int i = 1; i < 5; i++)
-        {
-            Players.Add(new Player());
-        }
+        
     }
 
 }

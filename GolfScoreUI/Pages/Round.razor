@@ -27,30 +27,30 @@
                 @for(int j = 0; j < scorecard.Players.Count; j++)
                 {
                     int playerIndex = j;
-                    <td class="col-xs-1"><input id="name" class="form-control" @bind-value="@scorecard.Score[playerIndex, hole]" @bind-value:event="oninput" @onkeyup="UpdateScore" /></td>
+                    <td class="col-xs-1"><input id="name" class="form-control" @bind-value="@scorecard.Score[playerIndex, hole]" @bind-value:event="oninput" /></td>
                 }            
             </tr>
         }
         <tr>
             <th>Sum</th>
-            @for(int i = 0; i < players.Count; i++)
+            @for(int i = 0; i < scorecard.Players.Count; i++)
             {                
                 int playerIndex = i;
-                <td>@score[i]</td>
+                <td>@scorecard.ScoreSum[i]</td>
             }
         </tr>
       </tbody>
     </table>
-</div> bn
-
+</div>
+ 
 @code {
-    private static List<Player> players = new List<Player> { new Player { Name = "David" }, new Player { Name = "Busk" }, new Player { Name = "Mark" } };
-    private Scorecard scorecard = new Scorecard(players);
-    private int[] score = new int[players.Count];
+    private Scorecard? scorecard;
 
-    private async Task UpdateScore()
+    protected override void OnInitialized()
     {
-        Console.WriteLine("Score updated!");
-        score = scorecard.ScoreSum;
+        scorecard = new Scorecard();
+        scorecard.AddPlayer("David");
+        scorecard.AddPlayer("Busk");
+        scorecard.AddPlayer("Mark");
     }
 }
