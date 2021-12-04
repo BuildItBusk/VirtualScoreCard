@@ -6,32 +6,28 @@
 <EditForm Model="@scorecard" OnValidSubmit="@HandleValidSubmit">
 <div class="form-group">
     <label for="maxStrokesGroup">Maximum number of strokes per hole</label>
-    <select class="form-select" id="maxStrokes" @bind="scorecard.MaxStrokes">
-        <option selected>Choose...</option>
-        @for(int i = 1; i <= 10; i++)
-        {
-            <option value="@i">@i</option>
-        }
-
-    </select>
+    <InputNumber class="form-select" id="maxStrokes" @bind-Value="scorecard.MaxStrokes" />
   </div>
   <div class="form-group">
-    <label for="playerNamesGroup">Player names</label>
-    @for (int i = 1; i <= scorecard.Players.Count; i++)
-    {
-        int idx = i;
-        <input type="text" class="form-control mb-2" id="player-@idx" placeholder="Player @idx">
-    }
+    <fieldset>
+        <legend>Players</legend>
+        @foreach (var element in players.Select((p, i) => new { Player = p, Index = i}))
+        {
+            <InputText id="@($"player-{element.Index+1}")" placeholder="@($"Player {element.Index+1}")" class="form-control mb-2" @bind-Value="@element.Player.Name" />
+        }
+    </fieldset>
   </div>
   <button type="submit" class="btn btn-primary">Start round</button>
 </EditForm>
 
 @code {
     private Scorecard scorecard = new Scorecard();
+    private List<Player> players = new List<Player> { new Player { Name = "" }, new Player { Name = "" }, new Player { Name = "" }, new Player { Name = "" } };
 
     private void HandleValidSubmit()
     {
-        
+        foreach (var player in players)
+            Console.WriteLine(player.Name);
     }
 
 }
