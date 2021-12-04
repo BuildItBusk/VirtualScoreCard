@@ -1,11 +1,12 @@
 ﻿@page "/newround"
+@using GolfScoreUI.Data
 
 <h3>Start a new round</h3>
 
 <form>
 <div class="form-group">
     <label for="maxStrokesGroup">Maximum number of strokes per hole</label>
-    <select class="custom-select my-1 mr-sm-2" id="maxStrokes" @bind="MaxStrokes">
+    <select class="form-select" id="maxStrokes" @bind="MaxStrokes">
         <option selected>Choose...</option>
         @for(int i = 1; i <= 10; i++)
         {
@@ -15,26 +16,27 @@
     </select>
   </div>
   <div class="form-group">
-    <label for="numberOfPlayersGroup">Number of players (1-4)</label>
-    <select class="custom-select my-1 mr-sm-2" id="numberOfPlayers" @bind="NumberOfPlayers">
-        <option selected>Choose...</option>
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
-        <option value="4">Four</option>
-    </select>
-  </div>
-  <div class="form-group">
     <label for="playerNamesGroup">Player names</label>
-    @for(int i = 1; i <= NumberOfPlayers; i++)
+    @foreach(var player in Players)
     {
-        <input type="text" class="form-control mb-2" id="player-@i" placeholder="Player @i">
+        <input type="text" class="form-control mb-2" id="player-@PlayerIndex" placeholder="Player @PlayerIndex">
+        PlayerIndex++;
     }
   </div>
   <button type="submit" class="btn btn-primary">Start round</button>
 </form>
 
 @code {
-    private int MaxStrokes { get; set; } = 7;
-    private int NumberOfPlayers { get; set; }
+    private int PlayerIndex = 1;
+    private int MaxStrokes { get; set; } = 8;
+    private List<Player> Players { get; } = new List<Player>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        for (int i = 1; i < 5; i++)
+        {
+            Players.Add(new Player());
+        }
+    }
+
 }

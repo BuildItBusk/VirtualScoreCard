@@ -41,10 +41,10 @@
         </tr>
       </tbody>
     </table>
-</div>
+</div> bn
 
 @code {
-    private static List<Player> players = new List<Player> { new Player("David"), new Player("Busk"), new Player("Mark")};
+    private static List<Player> players = new List<Player> { new Player { Name = "David" }, new Player { Name = "Busk" }, new Player { Name = "Mark" } };
     private Scorecard scorecard = new Scorecard(players);
     private int[] score = new int[players.Count];
 
