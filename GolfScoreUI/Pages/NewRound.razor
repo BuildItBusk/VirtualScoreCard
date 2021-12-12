@@ -1,33 +1,39 @@
 ﻿@page "/newround"
+
 @using GolfScoreUI.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject ProtectedLocalStorage ProtectedLocalStorage
 
 <h3>Start a new round</h3>
 
-<EditForm Model="@scorecard" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@roundSettings" OnValidSubmit="@HandleValidSubmit">
 <div class="form-group">
-    <label for="maxStrokesGroup">Maximum number of strokes per hole</label>
-    <InputNumber class="form-select" id="maxStrokes" @bind-Value="scorecard.MaxStrokes" />
-  </div>
-  <div class="form-group">
-    <fieldset>
-        <legend>Players</legend>
-        @foreach (var element in players.Select((p, i) => new { Player = p, Index = i}))
-        {
-            <InputText id="@($"player-{element.Index+1}")" placeholder="@($"Player {element.Index+1}")" class="form-control mb-2" @bind-Value="@element.Player.Name" />
-        }
-    </fieldset>
-  </div>
-  <button type="submit" class="btn btn-primary">Start round</button>
+    <label for="maxStrokes">Maximum number of strokes per hole</label>
+    <InputNumber class="form-control form-control-lg" id="maxStrokes" @bind-Value="roundSettings.MaxStrokesPerHole" />
+
+    <label for="numberOfHoles">Number of holes</label>
+    <InputNumber class="form-control form-control-lg" id="numberOfHoles" @bind-Value="roundSettings.NumberOfHoles" />
+
+    <div class="form-group">
+        <fieldset id="Players">
+            <legend>Players</legend>
+                @foreach (var element in roundSettings.Players.Select((p, i) => new { Player = p, Index = i }))
+                {
+                    <InputText id="@($"player-{element.Index+1}")" placeholder="@($"Player {element.Index+1}")" class="form-control mb-2" @bind-Value="@element.Player.Name" />
+                }
+        </fieldset>
+    </div>
+    <button type="submit" class="btn btn-primary">Start round</button>
+</div>
 </EditForm>
 
 @code {
-    private Scorecard scorecard = new Scorecard();
-    private List<Player> players = new List<Player> { new Player { Name = "" }, new Player { Name = "" }, new Player { Name = "" }, new Player { Name = "" } };
+    private RoundSettings roundSettings = new();
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        foreach (var player in players)
-            Console.WriteLine(player.Name);
+        var scorecard = new Scorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, roundSettings.Players);
     }
 
 }

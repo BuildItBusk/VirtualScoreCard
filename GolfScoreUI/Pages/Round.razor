@@ -48,9 +48,13 @@
 
     protected override void OnInitialized()
     {
-        scorecard = new Scorecard();
-        scorecard.AddPlayer("David");
-        scorecard.AddPlayer("Busk");
-        scorecard.AddPlayer("Mark");
+        var players = new List<Player>
+        {
+            new Player { Name = "David" },
+            new Player { Name = "Busk" },
+            new Player { Name = "Mark" }
+        };
+
+        scorecard = new Scorecard(numberOfHoles: 9, maxStrokes: 8, players);
     }
 }
