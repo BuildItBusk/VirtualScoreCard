@@ -8,53 +8,59 @@
 <h3>Scoreboard</h3>
 
 <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="row">#</th>
-          @foreach(var player in scorecard.Players)
-          {
-              <th scope="col">@player.Name</th>
-          }          
-        </tr>
-      </thead>
-      <tbody>
-      @for(int i = 0; i < scorecard.NumberOfHoles; i++)
-      {
-            int hole = i;
-            <tr>
-                <th scope="row">@(hole + 1)</th>
-                @for(int j = 0; j < scorecard.Players.Count; j++)
+    @if (scorecard != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="row">#</th>
+                    @foreach (var player in scorecard.Players)
+                    {
+                        <th scope="col">@player.Name</th>
+                    }          
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 1; i <= scorecard.NumberOfHoles; i++)
                 {
-                    int playerIndex = j;
-                    <td class="col-xs-1"><input id="name" class="form-control" @bind-value="@scorecard.Score[playerIndex, hole]" @bind-value:event="oninput" /></td>
-                }            
+                    int hole = i;
+                    <tr>
+                        <th scope="row">@(hole)</th>
+                        @foreach(var holeScore in scorecard.Scores.Where(s => s.HoleNumber == hole))
+                        {
+                            <td class="col-xs-1"><input id="name" class="form-control" @bind-value="holeScore.NumberOfStrokes" @bind-value:event="oninput" /></td>
+                        }            
+                    </tr>
+                }
+                <tr>
+                    <th>Sum</th>
+                    @foreach (var player in scorecard.Players)
+                    {
+                        <td>@scorecard.ScoreSum(player.Id)</td>
+                    }
             </tr>
-        }
-        <tr>
-            <th>Sum</th>
-            @for(int i = 0; i < scorecard.Players.Count; i++)
-            {                
-                int playerIndex = i;
-                <td>@scorecard.ScoreSum[i]</td>
-            }
-        </tr>
-      </tbody>
-    </table>
+          </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No scorecard available, please start a new round.</p>
+    }
 </div>
  
 @code {
     private Scorecard? scorecard;
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var players = new List<Player>
+        if (firstRender)
         {
-            new Player { Name = "David" },
-            new Player { Name = "Busk" },
-            new Player { Name = "Mark" }
-        };
+            var result = await ProtectedLocalStorage.GetAsync<Scorecard>("scorecard");
+            if (result.Success)
+                scorecard = result.Value;
 
-        scorecard = new Scorecard(numberOfHoles: 9, maxStrokes: 8, players);
+            StateHasChanged();
+        }
+        
     }
 }

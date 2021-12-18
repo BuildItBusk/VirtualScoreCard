@@ -33,7 +33,15 @@
 
     private async Task HandleValidSubmit()
     {
-        var scorecard = new Scorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, roundSettings.Players);
+        var players = new List<Player>
+        {
+            new Player { Name = "Foo" },
+            new Player { Name = "Bar" },
+            new Player { Name = "Bas" }
+        };
+
+        var scorecard = new Scorecard(numberOfHoles: 9, maxStrokes: 8, players);
+        await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
     }
 
 }

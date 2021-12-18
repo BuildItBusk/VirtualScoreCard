@@ -9,19 +9,24 @@ namespace GolfScoreUI.Data
             NumberOfHoles = numberOfHoles;
             MaxStrokes = maxStrokes;
             Players = players;
-            Score = new int[Players.Count, NumberOfHoles];
+
+            foreach (var player in players)
+            {
+                for (int i = 1; i <= NumberOfHoles; i++)
+                    Scores.Add(new HoleScore { HoleNumber = i, PlayerId = player.Id });
+            }            
         }
 
         public Guid Id { get; } = Guid.NewGuid();
 
         public List<Player> Players { get; } = new List<Player>();
 
-        public int[,] Score { get; private set; } = new int[0,0];
+        public List<HoleScore> Scores { get; } = new List<HoleScore>();
 
         public int MaxStrokes { get; set; } = 8;
 
         public int NumberOfHoles { get; } = 9;
 
-        public int[] ScoreSum => Score.Sum(1);
+        public int ScoreSum(Guid playerId) => Scores.Where(s => s.PlayerId == playerId).Sum(s => s.NumberOfStrokes);
     }
 }
