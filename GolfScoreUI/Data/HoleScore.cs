@@ -1,9 +1,9 @@
 ﻿namespace GolfScoreUI.Data
 {
-    public record HoleScore
+    public class HoleScore
     {
         public Guid PlayerId { get; set; }
         public int HoleNumber { get; set; }
-        public int NumberOfStrokes { get; set; } = 0;
+        public int NumberOfStrokes { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace GolfScoreUI.Data
 
         public List<Player> Players { get; } = new List<Player>();
 
-        public List<HoleScore> Scores { get; } = new List<HoleScore>();
+        public List<HoleScore> Scores { get; init; } = new List<HoleScore>();
 
         public int MaxStrokes { get; set; } = 8;
 

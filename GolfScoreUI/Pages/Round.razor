@@ -55,12 +55,18 @@
     {
         if (firstRender)
         {
+            Console.WriteLine("Loading scorecard from local storage...");
             var result = await ProtectedLocalStorage.GetAsync<Scorecard>("scorecard");
             if (result.Success)
                 scorecard = result.Value;
 
             StateHasChanged();
         }
-        
+        else
+        {
+            Console.WriteLine("Saving scorecard to local storage...");
+            if (scorecard != null)
+                await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
+        }
     }
 }
