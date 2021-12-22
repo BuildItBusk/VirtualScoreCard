@@ -1,5 +1,6 @@
 ﻿@page "/newround"
 
+@using GolfScoreUI.Builders
 @using GolfScoreUI.Data
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 
@@ -36,18 +37,7 @@
     {
         var players = roundSettings.Players.Where(p => !string.IsNullOrEmpty(p.Name)).ToList();
 
-        Scorecard scorecard = new()
-        {
-            NumberOfHoles = roundSettings.NumberOfHoles,
-            MaxStrokes = roundSettings.MaxStrokesPerHole,
-            Players = players
-        };
-
-        foreach (var player in scorecard.Players)
-        {
-            for (int i = 1; i <= scorecard.NumberOfHoles; i++)
-                scorecard.Scores.Add(new HoleScore { HoleNumber = i, PlayerId = player.Id });
-        } 
+        var scorecard = ScorecardBuilder.NewScorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, roundSettings.Players);
 
         await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
 
