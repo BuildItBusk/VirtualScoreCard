@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 
 @inject ProtectedLocalStorage ProtectedLocalStorage
+@inject NavigationManager NavManager
 
 <h3>Start a new round</h3>
 
@@ -49,6 +50,7 @@
         } 
 
         await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
-    }
 
+        NavManager.NavigateTo("/round");
+    }
 }
