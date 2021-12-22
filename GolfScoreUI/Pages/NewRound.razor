@@ -35,9 +35,9 @@
 
     private async Task HandleValidSubmit()
     {
-        var players = roundSettings.Players.Where(p => !string.IsNullOrEmpty(p.Name)).ToList();
+        var players = roundSettings.Players.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
 
-        var scorecard = ScorecardBuilder.NewScorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, roundSettings.Players);
+        var scorecard = ScorecardBuilder.NewScorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, players);
 
         await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
 
