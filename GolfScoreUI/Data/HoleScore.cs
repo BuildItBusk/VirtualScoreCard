@@ -1,6 +1,6 @@
 ﻿namespace GolfScoreUI.Data
 {
-    public class HoleScore
+    public record HoleScore
     {
         public Guid PlayerId { get; set; }
         public int HoleNumber { get; set; }

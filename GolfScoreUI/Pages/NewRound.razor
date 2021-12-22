@@ -33,14 +33,21 @@
 
     private async Task HandleValidSubmit()
     {
-        var players = new List<Player>
+        var players = roundSettings.Players.Where(p => !string.IsNullOrEmpty(p.Name)).ToList();
+
+        Scorecard scorecard = new()
         {
-            new Player { Name = "Foo" },
-            new Player { Name = "Bar" },
-            new Player { Name = "Bas" }
+            NumberOfHoles = roundSettings.NumberOfHoles,
+            MaxStrokes = roundSettings.MaxStrokesPerHole,
+            Players = players
         };
 
-        var scorecard = new Scorecard(numberOfHoles: 9, maxStrokes: 8, players);
+        foreach (var player in scorecard.Players)
+        {
+            for (int i = 1; i <= scorecard.NumberOfHoles; i++)
+                scorecard.Scores.Add(new HoleScore { HoleNumber = i, PlayerId = player.Id });
+        } 
+
         await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
     }
 
