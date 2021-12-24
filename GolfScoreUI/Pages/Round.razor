@@ -7,7 +7,7 @@
 
 <h3>Scoreboard</h3>
 
-<div class="table-responsive">
+<div class="table-responsive" onload="selectInputOnLoad">
     @if (scorecard != null)
     {
         <table class="table">
@@ -30,7 +30,7 @@
                         
                         @foreach(var holeScore in scorecard.Scores.Where(s => s.HoleNumber == hole))
                         {
-                            <td class="col-xs-1"><input id="player-@(playerIdx)-hole-@(i)" type="text" pattern="\d*" class="form-control" @bind-value="holeScore.NumberOfStrokes" @bind-value:event="oninput" /></td>
+                            <td class="col-xs-1"><input id="player-@(playerIdx)-hole-@(i)" type="text" pattern="\d*" class="form-control" onClick="this.select();" @bind-value="holeScore.NumberOfStrokes" @bind-value:event="oninput" /></td>
                             playerIdx++;
                         }            
                     </tr>
