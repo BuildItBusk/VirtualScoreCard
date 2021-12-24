@@ -1,4 +1,4 @@
-﻿@page "/round"
+﻿@page "/"
 
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using GolfScoreUI.Data
@@ -23,12 +23,15 @@
             <tbody>
                 @for (int i = 1; i <= scorecard.NumberOfHoles; i++)
                 {
+                    int playerIdx = 1; // Used to generate the id of the score fields
                     int hole = i;
                     <tr>
                         <th scope="row">@(hole)</th>
+                        
                         @foreach(var holeScore in scorecard.Scores.Where(s => s.HoleNumber == hole))
                         {
-                            <td class="col-xs-1"><input id="name" class="form-control" @bind-value="holeScore.NumberOfStrokes" @bind-value:event="oninput" /></td>
+                            <td class="col-xs-1"><input id="player-@(playerIdx)-hole-@(i)" type="text" pattern="/d*" class="form-control" @bind-value="holeScore.NumberOfStrokes" @bind-value:event="oninput" /></td>
+                            playerIdx++;
                         }            
                     </tr>
                 }
