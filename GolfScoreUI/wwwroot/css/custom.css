@@ -1,0 +1,6 @@
+﻿.highlight-on-focus:focus {
+    border-color: dodgerblue;
+    border-width: 2px;
+    border-style: solid;
+    background: lightyellow;
+}
