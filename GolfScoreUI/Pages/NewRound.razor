@@ -1,6 +1,5 @@
 ﻿@page "/newround"
 
-@using GolfScoreUI.Builders
 @using GolfScoreUI.Data
 @using GolfScoreUI.Repositories
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -37,7 +36,7 @@
     private async Task HandleValidSubmit()
     {
         var players = roundSettings.Players.Where(p => !string.IsNullOrWhiteSpace(p.Name)).ToList();
-        var scorecard = ScorecardBuilder.NewScorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, players);
+        var scorecard = new Scorecard(roundSettings.NumberOfHoles, roundSettings.MaxStrokesPerHole, players);
 
         IScorecardRepository repository = new ScorecardLocalStorageRepository(ProtectedLocalStorage);
         await repository.Create(scorecard);

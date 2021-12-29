@@ -1,5 +1,4 @@
 ﻿using GolfScoreUI.Data;
-using GolfScoreUI.DataTransferObjects;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace GolfScoreUI.Repositories
@@ -15,7 +14,7 @@ namespace GolfScoreUI.Repositories
     
         public async Task Create(Scorecard scorecard)
         {
-            var dto = new ScorecardDto()
+            var dto = new ScorecardDto
             {
                 Id = scorecard.Id,
                 MaxStrokes = scorecard.MaxStrokes,

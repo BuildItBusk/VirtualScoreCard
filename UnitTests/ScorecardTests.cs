@@ -1,5 +1,4 @@
-﻿using GolfScoreUI.Builders;
-using GolfScoreUI.Data;
+﻿using GolfScoreUI.Data;
 using NUnit.Framework;
 
 namespace UnitTests
@@ -14,7 +13,7 @@ namespace UnitTests
             var players = new List<Player>();
             players.Add(player);
 
-            var scorecard = ScorecardBuilder.NewScorecard(9, 8, players);
+            var scorecard = new Scorecard(numberOfHoles: 9, maxStrokes: 8, players);
 
             for (int i = 1; i <= scorecard.NumberOfHoles; i++)
                 scorecard.SetScore(player.Id, i, i);
