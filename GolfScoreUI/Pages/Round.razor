@@ -1,5 +1,6 @@
 ﻿@page "/"
 
+@using GolfScoreUI.Repositories
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using GolfScoreUI.Data
 
@@ -52,24 +53,33 @@
 </div>
  
 @code {
-    private Scorecard? scorecard;
+    private Scorecard? scorecard;    
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        IScorecardRepository repository = new ScorecardLocalStorageRepository(ProtectedLocalStorage);
+
         if (firstRender)
         {
-            Console.WriteLine("Loading scorecard from local storage...");
-            var result = await ProtectedLocalStorage.GetAsync<Scorecard>("scorecard");
-            if (result.Success)
-                scorecard = result.Value;
-
-            StateHasChanged();
+            try
+            {
+                scorecard = await repository.GetLatest();
+            }
+            catch (InvalidOperationException ex)
+            {
+                scorecard = null;
+            }
+            finally
+            {
+                StateHasChanged();
+            }
         }
         else
         {
-            Console.WriteLine("Saving scorecard to local storage...");
-            if (scorecard != null)
-                await ProtectedLocalStorage.SetAsync("scorecard", scorecard);
+            if (scorecard == null)
+                return;
+            
+            await repository.Update(scorecard);
         }
     }
 }
