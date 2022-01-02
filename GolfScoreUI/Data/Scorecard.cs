@@ -36,12 +36,6 @@
 
         public int NumberOfHoles { get; init; } = 9;
 
-        public void SetScore(Guid playerId, int holeNumber, int numberOfStrokes)
-        {
-            var hole = Scores.Where(s => s.PlayerId == playerId && s.HoleNumber == holeNumber).First();
-            hole.NumberOfStrokes = numberOfStrokes;
-        }
-
         public int ScoreSum(Guid playerId) => Scores.Where(s => s.PlayerId == playerId).Sum(s => s.NumberOfStrokes);
     }
 }
