@@ -52,7 +52,7 @@ namespace GolfScoreUI.Repositories
 
             var scores = new List<HoleScore>();
             foreach (var score in dto.Scores)
-                scores.Add(new HoleScore { HoleNumber = score.HoleNumber, NumberOfStrokes = score.Strokes, PlayerId = score.PlayerId });
+                scores.Add(new HoleScore(score.PlayerId, score.HoleNumber, dto.MaxStrokes) { NumberOfStrokes = score.Strokes });
 
             return new Scorecard(dto.Id, dto.NumberOfHoles, dto.MaxStrokes, players, scores);
         }

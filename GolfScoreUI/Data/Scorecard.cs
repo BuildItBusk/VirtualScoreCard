@@ -11,23 +11,18 @@
 
         public Scorecard(int numberOfHoles, int maxStrokes, List<Player> players)
         {
-            if (numberOfHoles <1)
-                throw new ArgumentOutOfRangeException(nameof(numberOfHoles));
-            if (maxStrokes < 1)
-                throw new ArgumentOutOfRangeException(nameof(maxStrokes));
-
             Players = players ?? throw new ArgumentNullException(nameof(players));
-            NumberOfHoles = numberOfHoles;
-            MaxStrokes = maxStrokes;
+            NumberOfHoles = numberOfHoles > 0 ? numberOfHoles : throw new ArgumentOutOfRangeException(nameof(numberOfHoles));
+            MaxStrokes = maxStrokes > 0 ? maxStrokes : throw new ArgumentOutOfRangeException(nameof(maxStrokes));
 
+            // We don't need to add score, if they have already been given in the Constructor Initialiser.
             if (Scores.Count > 0)
                 return;
 
-            // We only need to add score, if they haven't been given in the Constructor Initialiser.
             foreach (var player in Players)
             {
-                for (int i = 1; i <= NumberOfHoles; i++)
-                    Scores.Add(new HoleScore { HoleNumber = i, PlayerId = player.Id });
+                for (int holeNumber = 1; holeNumber <= NumberOfHoles; holeNumber++)
+                    Scores.Add(new HoleScore(player.Id, holeNumber, maxStrokes));
             }
         }
 
