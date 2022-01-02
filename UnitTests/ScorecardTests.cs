@@ -35,5 +35,19 @@ namespace UnitTests
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new Scorecard(numberOfHoles, 1, new List<Player>()));
         }
+
+        [Test]
+        public void SumsCorrectly()
+        {
+            var players = new List<Player> { new Player { Name = "TestPlayer" } };
+            var testPlayerId = players.First().Id;
+            var scorecard = new Scorecard(numberOfHoles: 9, maxStrokes: 8, players);
+            var scores = new int[] { 4, 5, 3, 2, 5, 6, 8, 3, 5 };
+
+            for (int holeNumber = 1; holeNumber <= scorecard.NumberOfHoles; holeNumber++)
+                scorecard.Scores.Add(new HoleScore(testPlayerId, holeNumber, scorecard.MaxStrokes) { NumberOfStrokes = scores[holeNumber - 1] });
+
+            Assert.AreEqual(scores.Sum(), scorecard.ScoreSum(testPlayerId));
+        }
     }
 }
