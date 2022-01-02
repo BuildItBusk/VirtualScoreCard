@@ -19,13 +19,21 @@ namespace UnitTests
         }
 
         [Test]
-        [TestCase(0, 1)]
-        [TestCase(1, 0)]
-        [TestCase(-5, 1)]
-        [TestCase(1, -5)]
-        public void PreventsInvalidValues(int maxStrokes, int numberOfHoles)
+        [TestCase(0)]
+        [TestCase(-1)]
+        [TestCase(int.MinValue)]
+        public void MaxStrokesMustBePositive(int maxStrokes)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Scorecard(numberOfHoles, maxStrokes, new List<Player>()));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Scorecard(1, maxStrokes, new List<Player>()));
+        }
+
+        [Test]
+        [TestCase(0)]
+        [TestCase(-1)]
+        [TestCase(int.MinValue)]
+        public void NumberOfHolesMustBePositive(int numberOfHoles)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Scorecard(numberOfHoles, 1, new List<Player>()));
         }
     }
 }
