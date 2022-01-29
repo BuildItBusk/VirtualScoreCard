@@ -1,6 +1,6 @@
 ﻿namespace GolfScoreAPI.Models;
 
-public class JwtSettings
+public class JwtTokenOptions
 {
     public bool ValidateIssuerSigningKey { get; set; }
     public string IssuerSigningKey { get; set; }

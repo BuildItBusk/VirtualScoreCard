@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using GolfScoreAPI.Models;
 
-namespace GolfScoreAPI.JwtHelpers;
+namespace GolfScoreAPI.Authentication;
 
 public static class JwtHelpers
 {
@@ -27,7 +27,7 @@ public static class JwtHelpers
         return GetClaims(userAccount, id);
     }
 
-    public static UserToken GetTokenKey(UserToken model, JwtSettings jwtSettings)
+    public static UserToken GetTokenKey(UserToken model, JwtTokenOptions jwtSettings)
     {
         if (model == null)
             throw new ArgumentNullException(nameof(model));

@@ -1,4 +1,5 @@
 ﻿using GolfScoreAPI.Models;
+using GolfScoreAPI.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -9,21 +10,21 @@ namespace GolfScoreAPI.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private readonly JwtSettings jwtSettings;
+    private readonly JwtTokenOptions jwtSettings;
 
-    public AccountController(JwtSettings jwtSettings)
+    public AccountController(JwtTokenOptions jwtSettings)
     {
         this.jwtSettings = jwtSettings ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
 
     [HttpPost]
-    public IActionResult GetToken(LoginRequest loginRequest)
+    public IActionResult GetToken(string username, string password)
     {
-        var user = LookupUser(loginRequest);
+        var user = LookupUser(username, password);
         if (user is null)
             return BadRequest("Incorrect username or password.");
 
-        UserToken token = JwtHelpers.JwtHelpers.GetTokenKey(new UserToken()
+        UserToken token = JwtHelpers.GetTokenKey(new UserToken()
         {
             UserName = user.UserName,
             EmailId = user.EmailId,
@@ -41,13 +42,16 @@ public class AccountController : ControllerBase
         return Ok(logins);
     }
 
-    private User? LookupUser(LoginRequest? loginRequest)
+    private User? LookupUser(string username, string password)
     {
-        if (loginRequest == null)
-            throw new ArgumentNullException(nameof(loginRequest));
+        if (username is null)
+            throw new ArgumentNullException(nameof(username));
+
+        if (password is null)
+            throw new ArgumentNullException(nameof(password));
 
         return logins.FirstOrDefault(
-            l => l.UserName.Equals(loginRequest.UserName, StringComparison.OrdinalIgnoreCase) && l.Password == loginRequest.Password);
+            l => l.UserName.Equals(username, StringComparison.OrdinalIgnoreCase) && l.Password == password);
     }
 
     // Temporary list of users, until database is in place.
