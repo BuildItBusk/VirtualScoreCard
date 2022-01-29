@@ -2,7 +2,7 @@
 
 namespace GolfScoreAPI.Models;
 
-public class UserLogins
+public class LoginRequest
 {
     [Required]
     public string UserName { get; set; }
