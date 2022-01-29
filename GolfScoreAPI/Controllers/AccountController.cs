@@ -20,49 +20,35 @@ public class AccountController : ControllerBase
     [HttpPost]
     public IActionResult GetToken(string username, string password)
     {
-        var user = LookupUser(username, password);
-        if (user is null)
-            return BadRequest("Incorrect username or password.");
+        if (IsValidUser(username, password, out User user))
+        { 
+            UserToken token = JwtHelpers.GetTokenKey(new UserToken()
+            {
+                UserName = user.UserName,
+                EmailId = user.EmailId,
+                GuidId = Guid.NewGuid(),
+                Id = user.Id
+            }, jwtSettings);
 
-        UserToken token = JwtHelpers.GetTokenKey(new UserToken()
+            return Ok(token);
+        }
+        else
         {
-            UserName = user.UserName,
-            EmailId = user.EmailId,
-            GuidId = Guid.NewGuid(),
-            Id = user.Id
-        }, jwtSettings);
-
-        return Ok(token);
+            return BadRequest("Invalid username and/or password.");
+        }
     }
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult GetList()
     {
-        return Ok(logins);
+        return Ok();
     }
 
-    private User? LookupUser(string username, string password)
+    private static bool IsValidUser(string username, string password, out User user)
     {
-        if (username is null)
-            throw new ArgumentNullException(nameof(username));
-
-        if (password is null)
-            throw new ArgumentNullException(nameof(password));
-
-        return logins.FirstOrDefault(
-            l => l.UserName.Equals(username, StringComparison.OrdinalIgnoreCase) && l.Password == password);
+        user = new User { Id = Guid.NewGuid(), UserName = "Admin", EmailId = "busk.soerensen@gmail.com" };
+        return true;
     }
 
-    // Temporary list of users, until database is in place.
-    private readonly IEnumerable<User> logins = new List<User>()
-    {
-        new User()
-        {
-            Id = Guid.NewGuid(),
-            EmailId = "busk.soerensen@gmail.com",
-            UserName = "Admin",
-            Password = "Admin"
-        }
-    };
 }
