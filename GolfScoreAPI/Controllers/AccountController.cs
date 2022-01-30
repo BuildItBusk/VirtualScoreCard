@@ -1,7 +1,4 @@
-﻿using GolfScoreAPI.Models;
-using GolfScoreAPI.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,20 +11,12 @@ namespace GolfScoreAPI.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private readonly JwtTokenOptions jwtSettings;
-
-    public AccountController(JwtTokenOptions jwtSettings)
-    {
-        this.jwtSettings = jwtSettings ?? throw new ArgumentNullException(nameof(jwtSettings));
-    }
-
     [HttpPost]
     public IActionResult GetToken(string username, string password)
     {
-        if (IsValidUser(username, password, out User user))
+        if (IsValidUser(username, password, out UserAccount user))
         {
             string token = GenerateToken(user);
-
             return Ok(token);
         }
         else
@@ -37,25 +26,27 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult GetList()
+    [Authorize]
+    public IActionResult GetUser()
     {
-        return Ok();
+        // This end point is just used to verify that we are authorized correctly.
+        return Ok("Congrats, you are authorized to see this.");
     }
 
-    private static bool IsValidUser(string username, string password, out User user)
+    private static bool IsValidUser(string username, string password, out UserAccount user)
     {
-        user = new User { Id = Guid.NewGuid(), UserName = "Admin", EmailId = "busk.soerensen@gmail.com" };
+        // This is where you would look the user up in the database.
+        user = new UserAccount(Id: Guid.NewGuid(), Username: "Admin", Email: "busk.soerensen@gmail.com");
         return true;
     }
 
-    private static string GenerateToken(User user)
+    private static string GenerateToken(UserAccount user)
     {
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.EmailId),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString())
     };
 
@@ -69,4 +60,5 @@ public class AccountController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    private record UserAccount(Guid Id, string Username, string Email);
 }
