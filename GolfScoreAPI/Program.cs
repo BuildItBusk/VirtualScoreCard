@@ -29,6 +29,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+options.SwaggerDoc(
+    "v1", new OpenApiInfo
+    {
+        Title = "Golf Score API",
+        Version = "v1"
+    });
+
+    // This section allows submitting the token with your request in Swagger.
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.Http,
@@ -37,6 +45,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "JWT Authorization header using the Bearer scheme."
     });
 
+    // This section allows submitting the token with your request in Swagger.
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -55,17 +64,13 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 
