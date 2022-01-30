@@ -1,6 +1,7 @@
 ﻿using GolfScoreAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace GolfScoreAPI.Authentication;
 
@@ -15,22 +16,18 @@ public static class AuthenticationExtensions
         services.AddSingleton(tokenOptions);
         services.AddAuthentication(options =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = "JwtBearer";
+            options.DefaultChallengeScheme = "JwtBearer";
         }).AddJwtBearer(options =>
         {
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters()
             {
-                IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(tokenOptions.IssuerSigningKey)),
-                ValidateIssuer = tokenOptions.ValidateIssuer,
-                ValidIssuer = tokenOptions.ValidIssuer,
-                ValidateAudience = tokenOptions.ValidateAudience,
-                ValidAudience = tokenOptions.ValidAudience,
-                RequireExpirationTime = tokenOptions.RequireExpirationTime,
-                ValidateLifetime = tokenOptions.ValidateLifetime,
-                ClockSkew = TimeSpan.FromDays(1)
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ThisKeyMustBeAtLeast16Characters")),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromMinutes(5)
             };
         });
     }
