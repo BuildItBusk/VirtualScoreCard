@@ -14,14 +14,14 @@ public class TokenController : ControllerBase
     {
         if (IsValidUser(loginRequest.Username, 
                         loginRequest.Password, 
-                        out UserAccount user))
+                        out UserAccount? user))
         {
             string token = TokenHelper.GenerateToken(user);
             return Ok(token);
         }
         else
         {
-            return BadRequest("Invalid username and/or password.");
+            return Unauthorized("Invalid username and/or password.");
         }
     }
 
@@ -35,13 +35,24 @@ public class TokenController : ControllerBase
         return Ok("Congrats, you are authorized to see this.");
     }
 
-    private static bool IsValidUser(string username, string password, out UserAccount user)
+    private static bool IsValidUser(string username, string password, out UserAccount? user)
     {
-        // This is where you would look the user up in the database.
-        user = new UserAccount(Id: Guid.NewGuid(), 
-                                Username: "Admin", 
-                                Email: "busk.soerensen@gmail.com");
+        int iterations = 10000;
+        int keySize = 32;
 
-        return true;
+        user = Users.FirstOrDefault(user => user.Username == username);
+        
+        if (user == null)
+            return false;
+
+        bool passwordIsValid = PasswordHelper.IsMatch(password, user.Password, iterations, keySize);
+
+        return passwordIsValid;
     }
+
+    private static readonly List<UserAccount> Users = new()
+    {
+        new UserAccount(Id: Guid.NewGuid(), Username: "Admin", Email: "busk.soerensen@gmail.com", Password: "salt:nFsC5t2MMGPT7qdVTM2w5ufR/X/C9UyoCpunCNTSxNo="),
+        new UserAccount(Id: Guid.NewGuid(), Username: "NotAdmin", Email: "test@test.dk", Password: "pepper:n6Elp2B2TpytyO3y8RFGURGRijGB/99iUwSYbTPI7UQ=")
+    };
 }

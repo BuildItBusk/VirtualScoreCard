@@ -18,12 +18,26 @@ namespace GolfScoreAPI.Authentication
                 iterationCount: iterations,
                 numBytesRequested: keySize));
 
-            return hashed;
+            return $"{salt}:{hashed}";
         }
 
-        public static bool IsMatch(string password, string hashedPassword)
+        public static bool IsMatch(string password, string hashedPassword, int iterations = 100000, int keySize = 32)
         {
-            throw new NotImplementedException();
+            string salt = GetSalt(hashedPassword);
+            string hashedInput = HashPassword(password, salt, iterations, keySize);
+            return hashedInput == hashedPassword;
+        }
+
+        public static string GenerateSalt(int saltLength)
+        {
+            byte[] salt = RandomNumberGenerator.GetBytes(saltLength);
+            return Convert.ToBase64String(salt);
+        }
+
+        private static string GetSalt(string hashedPassword)
+        {
+            string[] passwordSplit = hashedPassword.Split(":");
+            return passwordSplit[0];
         }
     }
 }
