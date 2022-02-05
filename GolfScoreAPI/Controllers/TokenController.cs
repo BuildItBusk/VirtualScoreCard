@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using GolfScoreAPI.Authentication;
 using GolfScoreAPI.Models;
+using GolfScoreAPI.DbContexts;
 
 namespace GolfScoreAPI.Controllers;
 
@@ -9,12 +10,19 @@ namespace GolfScoreAPI.Controllers;
 [ApiController]
 public class TokenController : ControllerBase
 {
+    private readonly UserProfileContext _userProfileContext;
+
+    public TokenController(UserProfileContext userProfileContext)
+    {
+        _userProfileContext = userProfileContext ?? throw new ArgumentNullException(nameof(userProfileContext));
+    }
+
     [HttpPost]
     public IActionResult GetToken(LoginRequest loginRequest)
     {
         if (IsValidUser(loginRequest.Username, 
                         loginRequest.Password, 
-                        out UserProfileDto? user))
+                        out UserProfile? user))
         {
             string token = TokenHelper.GenerateToken(user);
             return Ok(token);
@@ -35,12 +43,14 @@ public class TokenController : ControllerBase
         return Ok("Congrats, you are authorized to see this.");
     }
 
-    private static bool IsValidUser(string username, string password, out UserProfileDto? user)
+    private bool IsValidUser(string username, string password, out UserProfile? user)
     {
-        int iterations = 10000;
+        int iterations = 100000;
         int keySize = 32;
 
-        user = Users.FirstOrDefault(user => user.Username == username);
+        user = _userProfileContext
+            .UserProfiles?
+            .FirstOrDefault(user => user.UserName == username);
         
         if (user == null)
             return false;
@@ -49,10 +59,4 @@ public class TokenController : ControllerBase
 
         return passwordIsValid;
     }
-
-    private static readonly List<UserProfileDto> Users = new()
-    {
-        new UserProfileDto(Username: "Admin", Email: "busk.soerensen@gmail.com", Password: "salt:nFsC5t2MMGPT7qdVTM2w5ufR/X/C9UyoCpunCNTSxNo="),
-        new UserProfileDto(Username: "NotAdmin", Email: "test@test.dk", Password: "pepper:n6Elp2B2TpytyO3y8RFGURGRijGB/99iUwSYbTPI7UQ=")
-    };
 }
