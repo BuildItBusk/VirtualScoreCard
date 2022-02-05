@@ -8,11 +8,10 @@ namespace GolfScoreAPI.Authentication;
 
 public static class TokenHelper
 {
-    public static string GenerateToken(Account user)
+    public static string GenerateToken(UserProfileDto user)
     {
         var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Name, user.Username),
         new Claim(ClaimTypes.Email, user.Email),
         new Claim(JwtRegisteredClaimNames.Exp,

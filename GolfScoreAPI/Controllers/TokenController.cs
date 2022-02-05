@@ -14,7 +14,7 @@ public class TokenController : ControllerBase
     {
         if (IsValidUser(loginRequest.Username, 
                         loginRequest.Password, 
-                        out Account? user))
+                        out UserProfileDto? user))
         {
             string token = TokenHelper.GenerateToken(user);
             return Ok(token);
@@ -35,7 +35,7 @@ public class TokenController : ControllerBase
         return Ok("Congrats, you are authorized to see this.");
     }
 
-    private static bool IsValidUser(string username, string password, out Account? user)
+    private static bool IsValidUser(string username, string password, out UserProfileDto? user)
     {
         int iterations = 10000;
         int keySize = 32;
@@ -50,9 +50,9 @@ public class TokenController : ControllerBase
         return passwordIsValid;
     }
 
-    private static readonly List<Account> Users = new()
+    private static readonly List<UserProfileDto> Users = new()
     {
-        new Account(Id: Guid.NewGuid(), Username: "Admin", Email: "busk.soerensen@gmail.com", Password: "salt:nFsC5t2MMGPT7qdVTM2w5ufR/X/C9UyoCpunCNTSxNo="),
-        new Account(Id: Guid.NewGuid(), Username: "NotAdmin", Email: "test@test.dk", Password: "pepper:n6Elp2B2TpytyO3y8RFGURGRijGB/99iUwSYbTPI7UQ=")
+        new UserProfileDto(Username: "Admin", Email: "busk.soerensen@gmail.com", Password: "salt:nFsC5t2MMGPT7qdVTM2w5ufR/X/C9UyoCpunCNTSxNo="),
+        new UserProfileDto(Username: "NotAdmin", Email: "test@test.dk", Password: "pepper:n6Elp2B2TpytyO3y8RFGURGRijGB/99iUwSYbTPI7UQ=")
     };
 }

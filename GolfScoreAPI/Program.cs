@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Entity Framework Core
-builder.Services.AddDbContext<AccountContext>(options =>
+builder.Services.AddDbContext<UserProfileContext>(options =>
                 options.UseInMemoryDatabase(databaseName: "MemoryBase"));
 
 builder.Services.AddControllers();
