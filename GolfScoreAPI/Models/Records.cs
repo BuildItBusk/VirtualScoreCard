@@ -1,3 +1,3 @@
 ﻿namespace GolfScoreAPI.Models;
 
-public record UserAccount(Guid Id, string Username, string Email, string Password);
+public record Account(Guid Id, string Username, string Email, string Password);
