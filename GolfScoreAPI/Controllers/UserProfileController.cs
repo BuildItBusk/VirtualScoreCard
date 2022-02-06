@@ -23,7 +23,7 @@ public class UserProfileController : ControllerBase
             throw new InvalidOperationException("Accounts cannot be null.");
 
         var salt = PasswordHelper.GenerateSalt(16);
-        var password = PasswordHelper.HashPassword(userDto.Password, salt, 100000, 32);
+        var password = PasswordHelper.HashPassword(userDto.Password, salt);
 
         var user = new UserProfile(userDto.Username, password);
 

@@ -45,9 +45,6 @@ public class TokenController : ControllerBase
 
     private bool IsValidUser(string username, string password, out UserProfile? user)
     {
-        int iterations = 100000;
-        int keySize = 32;
-
         user = _userProfileContext
             .UserProfiles?
             .FirstOrDefault(user => user.UserName == username);
@@ -55,7 +52,7 @@ public class TokenController : ControllerBase
         if (user == null)
             return false;
 
-        bool passwordIsValid = PasswordHelper.IsMatch(password, user.Password, iterations, keySize);
+        bool passwordIsValid = PasswordHelper.IsMatch(password, user.Password);
 
         return passwordIsValid;
     }
