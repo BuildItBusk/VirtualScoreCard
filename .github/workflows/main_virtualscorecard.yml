@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-ui:
     runs-on: windows-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build GolfScoreUI --configuration Release
         
       - name: Unit tests
         run: dotnet test
