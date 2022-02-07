@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GolfScoreAPI\GolfScoreAPI.csproj" />
     <ProjectReference Include="..\GolfScoreUI\GolfScoreUI.csproj" />
   </ItemGroup>
 
