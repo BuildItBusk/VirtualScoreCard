@@ -19,15 +19,14 @@ public class UserProfileController : ControllerBase
     [HttpPost]
     public IActionResult CreateUser(UserProfileDto userDto)
     {
-        if (_userProfileContext.UserProfiles == null)
-            throw new InvalidOperationException("Accounts cannot be null.");
-
         var salt = PasswordHelper.GenerateSalt(16);
         var password = PasswordHelper.HashPassword(userDto.Password, salt);
-
-        var user = new UserProfile(userDto.Username, password);
+                
+        var user = new UserProfile(userDto.Username, userDto.Email);
+        var credential = new Credential(user.Id, user.Username, password);
 
         _userProfileContext.UserProfiles.Add(user);
+        _userProfileContext.Credentials.Add(credential);
         _userProfileContext.SaveChanges();
 
         return Ok(userDto);

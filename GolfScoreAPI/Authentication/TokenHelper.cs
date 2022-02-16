@@ -12,7 +12,7 @@ public static class TokenHelper
     {
         var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Name, user.Username),
         new Claim(ClaimTypes.Email, user.Email),
         new Claim(JwtRegisteredClaimNames.Exp,
             new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString())

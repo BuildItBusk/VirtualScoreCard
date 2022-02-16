@@ -2,14 +2,13 @@
 
 public class UserProfile
 {
-    public UserProfile(string userName, string password)
+    public UserProfile(string username, string email)
     {
-        UserName = userName ?? throw new ArgumentNullException(nameof(userName));
-        Password = password ?? throw new ArgumentNullException(nameof(password));
+        Username = username ?? throw new ArgumentNullException(nameof(username));
+        Email = email;
     }
 
     public Guid Id { get; init; } = Guid.NewGuid();
-    public string UserName { get; set; }
-    public string Password { get; set; }
-    public string Email { get; set; } = "";
+    public string Username { get; init; }
+    public string Email { get; private set; } = "";
 }

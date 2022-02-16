@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using GolfScoreAPI.Authentication;
-using GolfScoreAPI.Models;
+﻿using GolfScoreAPI.Authentication;
 using GolfScoreAPI.DbContexts;
+using GolfScoreAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GolfScoreAPI.Controllers;
 
@@ -20,12 +20,14 @@ public class TokenController : ControllerBase
     [HttpPost]
     public IActionResult GetToken(LoginRequest loginRequest)
     {
-        if (IsValidUser(loginRequest.Username, 
-                        loginRequest.Password, 
-                        out UserProfile? user))
+        Credential? credential = GetCredentialIfValid(loginRequest.Username, loginRequest.Password);
+
+        if (credential is not null)
         {
+            var user = GetUserById(credential.UserId);
             string token = TokenHelper.GenerateToken(user);
             return Ok(token);
+            
         }
         else
         {
@@ -37,23 +39,30 @@ public class TokenController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public IActionResult GetUser()
+    public IActionResult VerifyAuthorized()
     {
         // This end point is just used to verify that we are authorized correctly.
         return Ok("Congrats, you are authorized to see this.");
     }
 
-    private bool IsValidUser(string username, string password, out UserProfile? user)
+    private Credential? GetCredentialIfValid(string username, string password)
     {
-        user = _userProfileContext
-            .UserProfiles?
-            .FirstOrDefault(user => user.UserName == username);
-        
-        if (user == null)
-            return false;
+        var credential = _userProfileContext
+                        .Credentials
+                        .FirstOrDefault(credential => credential.Username == username);
 
-        bool passwordIsValid = PasswordHelper.IsMatch(password, user.Password);
+        if (credential == null)
+            return null;
 
-        return passwordIsValid;
+        bool passwordIsValid = PasswordHelper.IsMatch(password, credential.Password);
+
+        return passwordIsValid ? credential : null;
+    }
+
+    private UserProfile GetUserById(Guid userId)
+    {
+        return _userProfileContext
+               .UserProfiles
+               .First(user => user.Id == userId);
     }
 }

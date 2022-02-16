@@ -12,7 +12,10 @@ public class UserProfileContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserProfile>().ToTable("Account");
+        modelBuilder.Entity<Credential>().HasKey("UserId");
     }
 
-    public DbSet<UserProfile>? UserProfiles { get; set; }
+    public DbSet<Credential> Credentials { get; set; }
+    public DbSet<UserProfile> UserProfiles { get; set; }
+
 }
