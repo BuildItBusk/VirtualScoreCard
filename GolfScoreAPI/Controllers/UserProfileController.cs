@@ -19,6 +19,7 @@ public class UserProfileController : ControllerBase
     [HttpPost]
     public IActionResult CreateUser(UserProfileDto userDto)
     {
+        Console.WriteLine("Creating new user: " + userDto.Username);
         var salt = PasswordHelper.GenerateSalt(16);
         var password = PasswordHelper.HashPassword(userDto.Password, salt);
                 

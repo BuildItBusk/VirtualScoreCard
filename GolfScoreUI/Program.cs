@@ -4,9 +4,16 @@ using Microsoft.AspNetCore.Components.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
+string baseAddress = @"https://golfscoreapi.azurewebsites.net/";
+
+#if DEBUG
+baseAddress = @"https://localhost:7051/api/";
+# endif
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddHttpClient("api", client => client.BaseAddress = new Uri(baseAddress));
 
 var app = builder.Build();
 

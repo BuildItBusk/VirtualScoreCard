@@ -1,6 +1,13 @@
 ﻿@page "/signup"
 
+@inject IHttpClientFactory httpClientFactory;
+
 @using GolfScoreUI.Data
+@using Microsoft.Net.Http.Headers
+@using System.Text.Json
+@using System.Text
+@using System.Diagnostics
+@using static System.Net.Mime.MediaTypeNames
 
 <div class="container-fluid" style="padding: 0px;">
     <div class="container-fluid" style="padding: 0px;">
@@ -8,9 +15,13 @@
     </div>
     <div class="container-fluid">
         <h3 class="text-center mt-4">Create profile</h3>
+        @if (userCreated)
+        {
+            <div style="color: green">User profile succesfully created!</div>
+        }        
         <EditForm Model="profile" OnValidSubmit="@HandleValidSubmit">
             <div class="form-floating  mt-4">
-                <InputText id="name" class="form-control mb-2" @bind-Value="@profile.Name" />
+                <InputText id="name" class="form-control mb-2" @bind-Value="@profile.UserName" />
                 <label for="name">Name</label>
             </div>
             
@@ -33,10 +44,24 @@
 
 @code {
     private NewProfile profile = new();
+    private bool userCreated = false;
 
     private async Task HandleValidSubmit()
     {
-        
-        
+        HttpClient api = httpClientFactory.CreateClient("api");
+
+        var newProfileJson = new StringContent(
+            JsonSerializer.Serialize(profile),
+            Encoding.UTF8,
+            Application.Json); 
+
+        using var httpResponseMessage =
+            await api.PostAsync("UserProfile", newProfileJson);
+
+        if (httpResponseMessage.IsSuccessStatusCode)
+        {
+            userCreated = true;
+            profile = new NewProfile();
+        }        
     }
 }
