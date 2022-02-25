@@ -12,6 +12,10 @@ public class UserProfileContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserProfile>().ToTable("Account");
+        modelBuilder.Entity<UserProfile>()
+            .Property(u => u.Created)
+            .HasDefaultValueSql("getdate()");
+
         modelBuilder.Entity<Credential>().HasKey("UserId");
     }
 

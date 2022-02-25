@@ -11,4 +11,5 @@ public class UserProfile
     public Guid Id { get; init; } = Guid.NewGuid();
     public string Username { get; init; }
     public string Email { get; private set; } = "";
+    public DateTime Created { get; init; }
 }

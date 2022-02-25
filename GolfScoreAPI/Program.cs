@@ -27,8 +27,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Entity Framework Core
+const string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GolfScore;Integrated Security=True;";
 builder.Services.AddDbContext<UserProfileContext>(options =>
-                options.UseInMemoryDatabase(databaseName: "MemoryBase"));
+                options.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 

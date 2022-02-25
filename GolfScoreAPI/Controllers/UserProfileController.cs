@@ -19,18 +19,21 @@ public class UserProfileController : ControllerBase
     [HttpPost]
     public IActionResult CreateUser(UserProfileDto userDto)
     {
-        Console.WriteLine("Creating new user: " + userDto.Username);
+        if (UserExists(userDto.Email))
+            return Conflict("A user with that e-mail address already exists.");
+
         var salt = PasswordHelper.GenerateSalt(16);
         var password = PasswordHelper.HashPassword(userDto.Password, salt);
                 
         var user = new UserProfile(userDto.Username, userDto.Email);
         var credential = new Credential(user.Id, user.Username, password);
 
+        _userProfileContext.Database.EnsureCreated();
         _userProfileContext.UserProfiles.Add(user);
         _userProfileContext.Credentials.Add(credential);
         _userProfileContext.SaveChanges();
 
-        return Ok(userDto);
+        return Ok(user.Id);
     }
 
     [HttpGet]
@@ -41,5 +44,10 @@ public class UserProfileController : ControllerBase
 
         List<UserProfile> users = _userProfileContext.UserProfiles.ToList();
         return Ok(users);
+    }
+
+    private bool UserExists(string email)
+    {
+        return _userProfileContext.UserProfiles.Any(x => x.Email == email);
     }
 }
