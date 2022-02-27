@@ -35,6 +35,9 @@ public class Scorecard
 
     public void AssignScore(string name, int hole, int strokes)
     {
+        if (hole > NumberOfHoles)
+            throw new ArgumentOutOfRangeException("Cannot assign score to a hole greater than the total number of holes.");
+
         var current = Scores.FirstOrDefault(s => s.PlayerName == name && s.HoleNumber == hole);
 
         if (current is not null)

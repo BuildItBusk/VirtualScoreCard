@@ -42,7 +42,7 @@ internal class ApiTests
 
         scorecard.AssignScore(user.Username, hole: 1, strokes: 3);
 
-        Assert.AreEqual(3, scorecard.Scores.First(s => s.PlayerName == user.Username && s.HoleNumber == 1));
+        Assert.AreEqual(3, scorecard.Scores.First(s => s.PlayerName == user.Username && s.HoleNumber == 1).Strokes);
     }
 
     [Test]

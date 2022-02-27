@@ -15,7 +15,7 @@ public class Score
 
         PlayerName = playerName;
         HoleNumber = holeNumber;
-        Strokes = 0;
+        Strokes = strokes;
     }
 
     public Guid ScorecardId { get; init; }
