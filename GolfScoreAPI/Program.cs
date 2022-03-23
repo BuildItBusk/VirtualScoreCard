@@ -1,3 +1,5 @@
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using GolfScoreAPI.DbContexts;
 using GolfScoreAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,9 +29,17 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Entity Framework Core
-const string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=GolfScore;Integrated Security=True;";
+#if DEBUG
+string connectionString = builder.Configuration.GetConnectionString("localDb");
+#else
+string keyVaultUrl = builder.Configuration["KeyVaultUrl"];
+var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+var secret = await client.GetSecretAsync("connectionString");
+string connectionString = secret.Value.ToString() ?? "";
+#endif
+
 builder.Services.AddDbContext<UserProfileContext>(options =>
-                options.UseSqlServer(connectionString));
+                    options.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 
