@@ -36,15 +36,15 @@ if (builder.Environment.IsProduction())
     var secret = await client.GetSecretAsync("connectionString");
     connectionString = secret.Value.ToString() ?? "N/A";
 
-    Console.WriteLine("Running in production - getting connection string from Azure Key Vault...");
+    System.Diagnostics.Trace.TraceInformation("Running in production - getting connection string from Azure Key Vault...");
 }
 else
 {
     connectionString = builder.Configuration["ConnectionString"];
-    Console.WriteLine("Running in development - using connection string from local secrets...");
+    System.Diagnostics.Trace.TraceInformation("Running in development - using connection string from local secrets...");
 }
 
-Console.WriteLine(connectionString);
+System.Diagnostics.Trace.TraceInformation(connectionString);
 
 builder.Services.AddDbContext<UserProfileContext>(options =>
                     options.UseSqlServer(connectionString));
