@@ -1,7 +1,6 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using GolfScoreAPI.DbContexts;
-using GolfScoreAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,15 +27,24 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Entity Framework Core
-#if DEBUG
-string connectionString = builder.Configuration.GetConnectionString("localDb");
-#else
-string keyVaultUrl = builder.Configuration["KeyVaultUrl"];
-var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
-var secret = await client.GetSecretAsync("connectionString");
-string connectionString = secret.Value.ToString() ?? "";
-#endif
+string connectionString;
+
+if (builder.Environment.IsProduction())
+{
+    string keyVaultUrl = builder.Configuration["KeyVaultUrl"];
+    var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+    var secret = await client.GetSecretAsync("connectionString");
+    connectionString = secret.Value.ToString() ?? "N/A";
+
+    Console.WriteLine("Running in production - getting connection string from Azure Key Vault...");
+}
+else
+{
+    connectionString = builder.Configuration["ConnectionString"];
+    Console.WriteLine("Running in development - using connection string from local secrets...");
+}
+
+Console.WriteLine(connectionString);
 
 builder.Services.AddDbContext<UserProfileContext>(options =>
                     options.UseSqlServer(connectionString));
