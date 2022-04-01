@@ -33,8 +33,8 @@ if (builder.Environment.IsProduction())
 {
     string keyVaultUrl = builder.Configuration["KeyVaultUrl"];
     var client = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
-    var secret = await client.GetSecretAsync("connectionString");
-    connectionString = secret.Value.ToString() ?? "N/A";
+    var secret = await client.GetSecretAsync("DatabaseConnectionString");
+    connectionString = secret.Value.ToString() ?? throw new NullReferenceException(nameof(secret));
 
     System.Diagnostics.Trace.TraceInformation("Running in production - getting connection string from Azure Key Vault...");
 }
