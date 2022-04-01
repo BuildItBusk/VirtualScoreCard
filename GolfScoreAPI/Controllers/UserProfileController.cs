@@ -43,6 +43,10 @@ public class UserProfileController : ControllerBase
             return NotFound();
 
         List<UserProfile> users = _userProfileContext.UserProfiles.ToList();
+
+        if (users == null || !users.Any())
+            NotFound("No users in database yet.");
+
         return Ok(users);
     }
 
