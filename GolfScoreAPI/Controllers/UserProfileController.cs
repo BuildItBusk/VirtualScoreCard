@@ -39,7 +39,9 @@ public class UserProfileController : ControllerBase
     [HttpGet]
     public IActionResult ListUsers()
     {
-        System.Diagnostics.Trace.TraceInformation("Getting all users...");
+        System.Diagnostics.Trace.TraceInformation("Getting all users... (TraceInformation)");
+        System.Diagnostics.Trace.WriteLine("Getting all users... (WriteLine)");
+        Console.WriteLine("Getting all users (Console.WriteLine)");
 
         if (_userProfileContext.UserProfiles is null)
             return NotFound();
