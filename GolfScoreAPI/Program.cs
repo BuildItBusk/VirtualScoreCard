@@ -9,6 +9,10 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Logging
+builder.Logging.AddAzureWebAppDiagnostics();
+
 // JWT Authentication
 builder.Services.AddAuthentication(options =>
 {

@@ -9,11 +9,13 @@ namespace GolfScoreAPI.Controllers;
 [ApiController]
 public class UserProfileController : ControllerBase
 {
-    private readonly UserProfileContext _userProfileContext;
+    private readonly UserProfileContext userProfileContext;
+    private readonly ILogger logger;
 
-    public UserProfileController(UserProfileContext userProfileContext)
+    public UserProfileController(UserProfileContext userProfileContext, ILogger<UserProfileController> logger)
     {
-        _userProfileContext = userProfileContext ?? throw new ArgumentNullException(nameof(userProfileContext));
+        this.userProfileContext = userProfileContext ?? throw new ArgumentNullException(nameof(userProfileContext));
+        this.logger = logger;
     }
 
     [HttpPost]
@@ -28,10 +30,10 @@ public class UserProfileController : ControllerBase
         var user = new UserProfile(userDto.Username, userDto.Email);
         var credential = new Credential(user.Id, user.Username, password);
 
-        _userProfileContext.Database.EnsureCreated();
-        _userProfileContext.UserProfiles.Add(user);
-        _userProfileContext.Credentials.Add(credential);
-        _userProfileContext.SaveChanges();
+        userProfileContext.Database.EnsureCreated();
+        userProfileContext.UserProfiles.Add(user);
+        userProfileContext.Credentials.Add(credential);
+        userProfileContext.SaveChanges();
 
         return Ok(user.Id);
     }
@@ -39,14 +41,15 @@ public class UserProfileController : ControllerBase
     [HttpGet]
     public IActionResult ListUsers()
     {
+        logger.LogInformation("Getting all users... (Logger)");
         System.Diagnostics.Trace.TraceInformation("Getting all users... (TraceInformation)");
         System.Diagnostics.Trace.WriteLine("Getting all users... (WriteLine)");
         Console.WriteLine("Getting all users (Console.WriteLine)");
 
-        if (_userProfileContext.UserProfiles is null)
+        if (userProfileContext.UserProfiles is null)
             return NotFound();
 
-        List<UserProfile> users = _userProfileContext.UserProfiles.ToList();
+        List<UserProfile> users = userProfileContext.UserProfiles.ToList();
 
         if (users == null || !users.Any())
             NotFound("No users in database yet.");
@@ -56,6 +59,6 @@ public class UserProfileController : ControllerBase
 
     private bool UserExists(string email)
     {
-        return _userProfileContext.UserProfiles.Any(x => x.Email == email);
+        return userProfileContext.UserProfiles.Any(x => x.Email == email);
     }
 }
