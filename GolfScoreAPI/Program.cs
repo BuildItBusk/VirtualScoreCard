@@ -31,8 +31,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-string connectionString;
+string connectionString = builder.Configuration.GetConnectionString("GolfScoreConnectionString");
 
+/*
 if (builder.Environment.IsProduction())
 {
     string keyVaultUrl = builder.Configuration["KeyVaultUrl"];
@@ -46,12 +47,12 @@ else
 {
     connectionString = builder.Configuration["ConnectionString"];
     System.Diagnostics.Trace.TraceInformation("Running in development - using connection string from local secrets...");
-}
+}*/
 
 System.Diagnostics.Trace.TraceInformation(connectionString);
 
 builder.Services.AddDbContext<UserProfileContext>(options =>
-                    options.UseSqlServer(connectionString));
+                    options.UseSqlServer(connectionString));   
 
 builder.Services.AddControllers();
 
