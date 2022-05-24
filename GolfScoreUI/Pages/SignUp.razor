@@ -19,6 +19,11 @@
         {
             <div style="color: green">User profile succesfully created!</div>
         }        
+        @if (!string.IsNullOrWhiteSpace(errorMessage))
+        {
+            <div style="color: red">@errorMessage</div>
+        }
+
         <EditForm Model="profile" OnValidSubmit="@HandleValidSubmit">
             <div class="form-floating  mt-4">
                 <InputText id="name" class="form-control mb-2" @bind-Value="@profile.UserName" />
@@ -45,6 +50,7 @@
 @code {
     private NewProfile profile = new();
     private bool userCreated = false;
+    private string errorMessage = "";
 
     private async Task HandleValidSubmit()
     {
@@ -60,8 +66,13 @@
 
         if (httpResponseMessage.IsSuccessStatusCode)
         {
+            errorMessage = "";
             userCreated = true;
             profile = new NewProfile();
-        }        
+        }
+        else
+        {
+            errorMessage = $"Failed to create user: {(int)httpResponseMessage.StatusCode} {httpResponseMessage.ReasonPhrase}";
+        }
     }
 }
